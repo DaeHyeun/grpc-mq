@@ -1,0 +1,20 @@
+//PS C:\Users\HCNC\Desktop\grpc\src\main\java\proto> protoc --java_out=.. --grpc-java_out=.. multiChat.proto
+syntax = "proto3";
+
+package com.example.grpc.multiChat;
+
+option java_multiple_files=true;
+
+// 메시지 정의
+message MultiChatMessage {
+  string sender = 1;   // 발신자
+  string message = 2;   // 메시지 내용
+  string receiveId = 3;
+  string timestamp = 4; // 메시지 전송 시간
+}
+
+// 서비스 정의
+service MultiChatService {
+  // 클라이언트에서 보내는 스트리밍 메시지
+  rpc SendMessage (stream MultiChatMessage) returns (stream MultiChatMessage);
+}

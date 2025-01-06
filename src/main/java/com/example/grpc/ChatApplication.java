@@ -1,8 +1,9 @@
 package com.example.grpc;
 
+import com.example.grpc.chat.ChatServiceImpl;
+import com.example.grpc.multiChat.MultiChatServiceImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class ChatApplication {
 		// gRPC 서버 인스턴스 생성
 		Server server = ServerBuilder.forPort(port) // 포트 50052에서 서버 실행
 				.addService(new ChatServiceImpl()) // ChatService 구현체 등록
+				.addService(new MultiChatServiceImpl())
 				.build();
 
 		System.out.println("====================================================");

@@ -3,6 +3,7 @@ package com.example.grpc;
 
 import com.example.grpc.chat.ChatMessage;
 import com.example.grpc.chat.ChatServiceGrpc;
+import com.example.grpc.mq.Consumer;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -20,11 +21,21 @@ public class ChatClient {
 
         // gRPC 서버와 연결할 채널 생성 (서버 IP를 localhost 대신 사용)
         // 예: 서버의 공인 IP 주소를 넣어야 함
-        String serverAddress = "172.168.10.82"; // 예: "172.168.10.74"
+        String serverAddress = "172.168.10.71"; // 예: "172.168.10.74"
         ManagedChannel channel = ManagedChannelBuilder.forAddress(serverAddress, 50052)
                 .usePlaintext() // 암호화되지 않은 연결 (보안상 더 안전한 방법은 gRPC TLS를 사용하는 것)
                 .build();
 
+        //수신처리
+        String reciId = "";
+        if(username.equals("aa")){
+            reciId = "bb";
+        }else {
+            reciId = "aa";
+        };
+        Consumer consumer = new Consumer(username,reciId);
+        Thread consumerThread = new Thread(consumer);
+        consumerThread.start();
 
         // 비동기 클라이언트 스텁 생성
         ChatServiceGrpc.ChatServiceStub asyncStub = ChatServiceGrpc.newStub(channel);
@@ -69,6 +80,7 @@ public class ChatClient {
                     .setMessage(message)
                     .setTimestamp(String.valueOf(System.currentTimeMillis()))
                     .build();
+            System.out.println(chatMessage.getMessage());
             requestObserver.onNext(chatMessage);
         }
 
