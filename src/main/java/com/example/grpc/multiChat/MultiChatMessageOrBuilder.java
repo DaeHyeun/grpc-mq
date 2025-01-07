@@ -50,23 +50,11 @@ public interface MultiChatMessageOrBuilder extends
       getMessageBytes();
 
   /**
-   * <code>string receiveId = 3;</code>
-   * @return The receiveId.
-   */
-  java.lang.String getReceiveId();
-  /**
-   * <code>string receiveId = 3;</code>
-   * @return The bytes for receiveId.
-   */
-  com.google.protobuf.ByteString
-      getReceiveIdBytes();
-
-  /**
    * <pre>
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 4;</code>
+   * <code>string timestamp = 3;</code>
    * @return The timestamp.
    */
   java.lang.String getTimestamp();
@@ -75,7 +63,7 @@ public interface MultiChatMessageOrBuilder extends
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 4;</code>
+   * <code>string timestamp = 3;</code>
    * @return The bytes for timestamp.
    */
   com.google.protobuf.ByteString

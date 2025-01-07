@@ -40,12 +40,12 @@ public final class MultiChat {
   static {
     java.lang.String[] descriptorData = {
       "\n\017multiChat.proto\022\032com.example.grpc.mult" +
-      "iChat\"Y\n\020MultiChatMessage\022\016\n\006sender\030\001 \001(" +
-      "\t\022\017\n\007message\030\002 \001(\t\022\021\n\treceiveId\030\003 \001(\t\022\021\n" +
-      "\ttimestamp\030\004 \001(\t2\201\001\n\020MultiChatService\022m\n" +
-      "\013SendMessage\022,.com.example.grpc.multiCha" +
-      "t.MultiChatMessage\032,.com.example.grpc.mu" +
-      "ltiChat.MultiChatMessage(\0010\001B\002P\001b\006proto3"
+      "iChat\"F\n\020MultiChatMessage\022\016\n\006sender\030\001 \001(" +
+      "\t\022\017\n\007message\030\002 \001(\t\022\021\n\ttimestamp\030\003 \001(\t2\201\001" +
+      "\n\020MultiChatService\022m\n\013SendMessage\022,.com." +
+      "example.grpc.multiChat.MultiChatMessage\032" +
+      ",.com.example.grpc.multiChat.MultiChatMe" +
+      "ssage(\0010\001B\002P\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -56,7 +56,7 @@ public final class MultiChat {
     internal_static_com_example_grpc_multiChat_MultiChatMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_example_grpc_multiChat_MultiChatMessage_descriptor,
-        new java.lang.String[] { "Sender", "Message", "ReceiveId", "Timestamp", });
+        new java.lang.String[] { "Sender", "Message", "Timestamp", });
     descriptor.resolveAllFeaturesImmutable();
   }
 

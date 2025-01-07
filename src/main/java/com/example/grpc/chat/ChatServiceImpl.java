@@ -1,6 +1,7 @@
 package com.example.grpc.chat;
 
-import com.example.grpc.mq.Procedure;
+import com.example.grpc.mq.QueueProcedure;
+import com.example.grpc.mq.TopicProcedure;
 import io.grpc.stub.StreamObserver;
 
 import java.util.ArrayList;
@@ -12,9 +13,12 @@ import java.util.concurrent.ConcurrentHashMap;
 //기본적인 기능들이 들어있을것으로 생각됨
 // ChatServiceGrpc.ChatServiceImplBase를 상속받아 proto 파일에서 기본적인 기능들을 가지고 온다고 생각됨
 public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
+
+    // ActiceMQ Queue를 활용예정
+
     // 필드
     private final Map<String, StreamObserver<ChatMessage>> clients = new ConcurrentHashMap<>();
-    private List<Procedure> procedureList = new ArrayList<>();
+    //private List<QueueProcedure> queueProcedureList = new ArrayList<>();
     // 메소드 오버라이딩
     // 메세지 보내는 것으로생각됨 파라미터는 스트림 옵저버 타입
     // return 옵저버 타입
@@ -34,41 +38,11 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
             //파라미터 ChatMessage타입
             @Override
             public void onNext(ChatMessage chatMessage) {
-                // 필드 초기화가 안되면
-                if (username == null) {
-                    username = chatMessage.getSender();
-                    clients.put(username, responseObserver);
-                    // 새로운 사용자일 경우
-                    if (username.equals("aa")){
-                        procedureList.add(new Procedure( username, "","bb", null,null));
-                        System.out.println(procedureList);
-
-                    }else {
-                        procedureList.add(new Procedure( username, "","aa", null,null));
-                    }
-                    username = chatMessage.getSender();
-                    clients.put(username, responseObserver);
-
-                    for (int i = 0; i < procedureList.size(); i++) {
-                        System.out.println(procedureList.get(i));
-                    }
-                    broadcastMessage("메인서버 : ", username + "님이 채팅에 참여하였습니다.");
-                    return;
-                }
-
                 String message = chatMessage.getMessage();
+                String receiveId = chatMessage.getReceiveId();
 
-                // 명령어 처리
-                if (message.equalsIgnoreCase("users")) {
-                    handleUsers(responseObserver);
-                } else if (message.startsWith("귓 ")) {
-                    handlePrivate(message, responseObserver);
-                } else {
-                    // 수신된 메시지를 다른 클라이언트에게 브로드캐스트
-                    broadcastMessage(chatMessage.getSender(), chatMessage.getMessage());
-                    // 메시지를 데이터베이스에 저장
-
-                }
+                // 새로운 사용자일 경우
+                new Thread(new QueueProcedure( chatMessage.getSender(), chatMessage.getSender() + " : " + message, receiveId,null,null )).start();
             }
 
             //에러
@@ -82,9 +56,6 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
             //퇴장
             @Override
             public void onCompleted() {
-                System.out.println(username + "님이 나가셨습니다.");
-                broadcastMessage("메인서버", username + "님이 나가셨습니다.");
-                removeClient();
             }
 
             private void removeClient() {
@@ -98,60 +69,6 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
             //                                          커스템 메소드                                             //
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            //메세지 보내는 Method
-            private void broadcastMessage(String sender, String message) {
-                for (int i = 0; i < procedureList.size(); i++) {
-                    if(sender.equals(procedureList.get(i).getName())){
-                        procedureList.get(i).setMessage(message);
-                        new Thread(procedureList.get(i)).start();
-                    }
-                }
-
-
-            }
-
-            // "users" 명령어 처리: 온라인 사용자 목록 반환
-            private void handleUsers(StreamObserver<ChatMessage> responseObserver) {
-                StringBuilder usersList = new StringBuilder("온라인 사용자 목록 :\n");
-                for (String user : clients.keySet()) {
-                    usersList.append(user).append("\n");
-                }
-                sendMessageToClient(responseObserver, usersList.toString());
-            }
-
-            // "귓" 명령어 처리: 특정 사용자에게 메시지 전송
-            private void handlePrivate(String message, StreamObserver<ChatMessage> responseObserver) {
-                String[] parts = message.split(" ", 3);
-                if (parts.length < 3) {
-                    sendMessageToClient(responseObserver, "잘못된 형식입니다. 올바른 형식은 귓 <유저이름> <메시지> 입니다.");
-                } else {
-                    String targetUser = parts[1];
-                    String privateMessage = parts[2];
-
-                    // 대상 사용자가 존재하는지 확인
-                    if (clients.containsKey(targetUser)) {
-                        StreamObserver<ChatMessage> targetObserver = clients.get(targetUser);
-                        ChatMessage privateChatMessage = ChatMessage.newBuilder()
-                                .setSender(username)
-                                .setMessage(privateMessage)
-                                .setTimestamp(String.valueOf(System.currentTimeMillis()))
-                                .build();
-                        targetObserver.onNext(privateChatMessage);  // 특정 사용자에게 메시지 전송
-                    } else {
-                        sendMessageToClient(responseObserver, targetUser + "님은 현재 채팅방에 없습니다.");
-                    }
-                }
-            }
-
-            // 서버 측에서 클라이언트에게 메시지 전송
-            private void sendMessageToClient(StreamObserver<ChatMessage> clientObserver, String message) {
-                ChatMessage messageToClient = ChatMessage.newBuilder()
-                        .setSender("")
-                        .setMessage(message)
-                        .setTimestamp(String.valueOf(System.currentTimeMillis()))
-                        .build();
-                clientObserver.onNext(messageToClient);
-            }
 
         };
     }

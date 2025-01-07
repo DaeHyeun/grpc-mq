@@ -1,13 +1,9 @@
 package com.example.grpc.mq;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
 import javax.jms.*;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,30 +13,22 @@ import java.util.HashMap;
 
 @Service
 @NoArgsConstructor
-public class Consumer implements Runnable, ExceptionListener{
+public class QueueConsumer implements Runnable, ExceptionListener{
     private String name;
-    private String receivedId;
 
-    public Consumer(String name, String receivedId) {
+    public QueueConsumer(String name) {
         this.name = name;
-        this.receivedId = receivedId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getReceivedId() {
-        return receivedId;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setReceivedId(String receivedId) {
-        this.receivedId = receivedId;
-    }
 
     public void run() {
         try {
@@ -65,7 +53,9 @@ public class Consumer implements Runnable, ExceptionListener{
                     // Handle text message
                     TextMessage textMessage = (TextMessage) message;
                     String text = textMessage.getText();
-                    System.out.println(receivedId + " : " + text);
+                    String red = "\u001B[31m";  // 빨간색
+                    String reset = "\u001B[0m";  // 색상 초기화
+                    System.out.println(red + text + reset);
                 } else if (message instanceof BytesMessage) {
 
                     // Handle file (BytesMessage)

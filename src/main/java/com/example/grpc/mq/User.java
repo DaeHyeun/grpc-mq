@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class User {
-    private Consumer consumer;
-    private Procedure procedure;
+    private QueueConsumer queueConsumer;
+    private QueueProcedure queueProcedure;
 
     public User(String name, String receivedId) {
         // 각 사용자에 대한 Consumer와 Procedure 객체를 초기화합니다.
-        this.consumer = new Consumer( name, receivedId);
-        this.procedure = new Procedure( name, "",receivedId, null,null);
+        this.queueConsumer = new QueueConsumer( name);
+        this.queueProcedure = new QueueProcedure( name, "",receivedId, null,null);
     }
 
     public void startChat(String name) {
         // Consumer를 별도의 스레드로 실행 (메시지 수신)
-        Thread consumerThread = new Thread(consumer);
+        Thread consumerThread = new Thread(queueConsumer);
         consumerThread.start();
 
         // 사용자로부터 메시지를 입력받고, 이를 Procedure에 전달하여 메시지 전송
@@ -32,8 +32,8 @@ public class User {
                 System.out.println("파일을 선택하세요 (파일 경로 입력): ");
                 String filePath = scanner.nextLine();
                 File file = new File(filePath);
-                procedure.setFile(file); // Set the file to send
-                new Thread(procedure).start();
+                queueProcedure.setFile(file); // Set the file to send
+                new Thread(queueProcedure).start();
             } else if(message.equalsIgnoreCase("자료")){
                 HashMap<String, Object> mapData = new HashMap<>();
                 while (true){
@@ -53,12 +53,12 @@ public class User {
                     }
                 }
                 System.out.println("최종자료 : " + mapData);
-                procedure.setMapData(mapData);
-                new Thread(procedure).start();
+                queueProcedure.setMapData(mapData);
+                new Thread(queueProcedure).start();
             }else {
-                procedure.setFile(null);
-                procedure.setMessage(message);
-                new Thread(procedure).start(); // Send a regular text message
+                queueProcedure.setFile(null);
+                queueProcedure.setMessage(message);
+                new Thread(queueProcedure).start(); // Send a regular text message
             }
         }
         scanner.close();

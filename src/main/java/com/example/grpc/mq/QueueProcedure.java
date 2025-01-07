@@ -1,29 +1,27 @@
 package com.example.grpc.mq;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.stereotype.Service;
 
 import javax.jms.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @NoArgsConstructor
-public class Procedure implements Runnable{
+public class QueueProcedure implements Runnable{
     private String name;
     private String message;
     private String receivedId;
     private HashMap<String, Object> mapData;
     private File file; // To hold the file to be sent
 
-    public Procedure(String name, String message, String receivedId, HashMap<String, Object> mapData, File file) {
+    public QueueProcedure(String name, String message, String receivedId, HashMap<String, Object> mapData, File file) {
         this.name = name;
         this.message = message;
         this.receivedId = receivedId;

@@ -33,7 +33,6 @@ private static final long serialVersionUID = 0L;
   private MultiChatMessage() {
     sender_ = "";
     message_ = "";
-    receiveId_ = "";
     timestamp_ = "";
   }
 
@@ -144,46 +143,7 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int RECEIVEID_FIELD_NUMBER = 3;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object receiveId_ = "";
-  /**
-   * <code>string receiveId = 3;</code>
-   * @return The receiveId.
-   */
-  @java.lang.Override
-  public java.lang.String getReceiveId() {
-    java.lang.Object ref = receiveId_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      receiveId_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string receiveId = 3;</code>
-   * @return The bytes for receiveId.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getReceiveIdBytes() {
-    java.lang.Object ref = receiveId_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      receiveId_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int TIMESTAMP_FIELD_NUMBER = 4;
+  public static final int TIMESTAMP_FIELD_NUMBER = 3;
   @SuppressWarnings("serial")
   private volatile java.lang.Object timestamp_ = "";
   /**
@@ -191,7 +151,7 @@ private static final long serialVersionUID = 0L;
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 4;</code>
+   * <code>string timestamp = 3;</code>
    * @return The timestamp.
    */
   @java.lang.Override
@@ -212,7 +172,7 @@ private static final long serialVersionUID = 0L;
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 4;</code>
+   * <code>string timestamp = 3;</code>
    * @return The bytes for timestamp.
    */
   @java.lang.Override
@@ -250,11 +210,8 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 2, message_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(receiveId_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 3, receiveId_);
-    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(timestamp_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 4, timestamp_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 3, timestamp_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -271,11 +228,8 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(2, message_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(receiveId_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, receiveId_);
-    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(timestamp_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(4, timestamp_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, timestamp_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -296,8 +250,6 @@ private static final long serialVersionUID = 0L;
         .equals(other.getSender())) return false;
     if (!getMessage()
         .equals(other.getMessage())) return false;
-    if (!getReceiveId()
-        .equals(other.getReceiveId())) return false;
     if (!getTimestamp()
         .equals(other.getTimestamp())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -315,8 +267,6 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getSender().hashCode();
     hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getMessage().hashCode();
-    hash = (37 * hash) + RECEIVEID_FIELD_NUMBER;
-    hash = (53 * hash) + getReceiveId().hashCode();
     hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
     hash = (53 * hash) + getTimestamp().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
@@ -456,7 +406,6 @@ private static final long serialVersionUID = 0L;
       bitField0_ = 0;
       sender_ = "";
       message_ = "";
-      receiveId_ = "";
       timestamp_ = "";
       return this;
     }
@@ -498,9 +447,6 @@ private static final long serialVersionUID = 0L;
         result.message_ = message_;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
-        result.receiveId_ = receiveId_;
-      }
-      if (((from_bitField0_ & 0x00000008) != 0)) {
         result.timestamp_ = timestamp_;
       }
     }
@@ -527,14 +473,9 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000002;
         onChanged();
       }
-      if (!other.getReceiveId().isEmpty()) {
-        receiveId_ = other.receiveId_;
-        bitField0_ |= 0x00000004;
-        onChanged();
-      }
       if (!other.getTimestamp().isEmpty()) {
         timestamp_ = other.timestamp_;
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
@@ -574,15 +515,10 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 18
             case 26: {
-              receiveId_ = input.readStringRequireUtf8();
+              timestamp_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000004;
               break;
             } // case 26
-            case 34: {
-              timestamp_ = input.readStringRequireUtf8();
-              bitField0_ |= 0x00000008;
-              break;
-            } // case 34
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -784,85 +720,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object receiveId_ = "";
-    /**
-     * <code>string receiveId = 3;</code>
-     * @return The receiveId.
-     */
-    public java.lang.String getReceiveId() {
-      java.lang.Object ref = receiveId_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        receiveId_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string receiveId = 3;</code>
-     * @return The bytes for receiveId.
-     */
-    public com.google.protobuf.ByteString
-        getReceiveIdBytes() {
-      java.lang.Object ref = receiveId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        receiveId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string receiveId = 3;</code>
-     * @param value The receiveId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setReceiveId(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      receiveId_ = value;
-      bitField0_ |= 0x00000004;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string receiveId = 3;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearReceiveId() {
-      receiveId_ = getDefaultInstance().getReceiveId();
-      bitField0_ = (bitField0_ & ~0x00000004);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string receiveId = 3;</code>
-     * @param value The bytes for receiveId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setReceiveIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      receiveId_ = value;
-      bitField0_ |= 0x00000004;
-      onChanged();
-      return this;
-    }
-
     private java.lang.Object timestamp_ = "";
     /**
      * <pre>
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 3;</code>
      * @return The timestamp.
      */
     public java.lang.String getTimestamp() {
@@ -882,7 +746,7 @@ private static final long serialVersionUID = 0L;
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 3;</code>
      * @return The bytes for timestamp.
      */
     public com.google.protobuf.ByteString
@@ -903,7 +767,7 @@ private static final long serialVersionUID = 0L;
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 3;</code>
      * @param value The timestamp to set.
      * @return This builder for chaining.
      */
@@ -911,7 +775,7 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       timestamp_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
@@ -920,12 +784,12 @@ private static final long serialVersionUID = 0L;
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearTimestamp() {
       timestamp_ = getDefaultInstance().getTimestamp();
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
@@ -934,7 +798,7 @@ private static final long serialVersionUID = 0L;
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 3;</code>
      * @param value The bytes for timestamp to set.
      * @return This builder for chaining.
      */
@@ -943,7 +807,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       timestamp_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
