@@ -3,6 +3,7 @@ package com.example.grpc.multiChat;
 
 import com.example.grpc.mq.QueueProcedure;
 import com.example.grpc.mq.TopicProcedure;
+import com.google.protobuf.ByteString;
 import io.grpc.stub.StreamObserver;
 
 import java.util.ArrayList;
@@ -58,11 +59,17 @@ public class MultiChatServiceImpl extends MultiChatServiceGrpc.MultiChatServiceI
                 // 명령어 처리
                 if (message.equalsIgnoreCase("users")) {
                     handleUsers(responseObserver);
-                } else if (message.startsWith("귓 ")) {
-                    handlePrivate(message, responseObserver);
-                } else {
+                } else if (message.equalsIgnoreCase("help")) {
+                    handlehelp(responseObserver);
+                } else if (message.contains("첨부파일:!!@@")) {
+                    ByteString fileData = chatMessage.getFile();
+                    // ByteString을 바이트 배열로 변환
+                    byte[] fileContent = fileData.toByteArray();
+                    fileMessage(chatMessage.getSender(), chatMessage.getMessage(), fileContent);
+                    } else {
                     // 수신된 메시지를 다른 클라이언트에게 브로드캐스트
                     broadcastMessage(chatMessage.getSender(), chatMessage.getMessage());
+
                     // 메시지를 데이터베이스에 저장
 
                 }
@@ -114,6 +121,18 @@ public class MultiChatServiceImpl extends MultiChatServiceGrpc.MultiChatServiceI
                 }
             }
 
+            //파일 전송
+            private void fileMessage(String sender, String message, byte[] fileData) {
+                for (int i = 0; i < topicProcedureList.size(); i++) {
+                    if (topicProcedureList.get(i).getName().equals(sender)) {
+                        topicProcedureList.get(i).setMessage(message);
+                        topicProcedureList.get(i).setFile(fileData);
+                        new Thread(topicProcedureList.get(i)).start();
+                        break;
+                    }
+                }
+            }
+
             // "users" 명령어 처리: 온라인 사용자 목록 반환
             private void handleUsers(StreamObserver<com.example.grpc.multiChat.MultiChatMessage> responseObserver) {
                  StringBuilder usersList = new StringBuilder("온라인 사용자 목록 :\n");
@@ -122,33 +141,24 @@ public class MultiChatServiceImpl extends MultiChatServiceGrpc.MultiChatServiceI
                 }
                 sendMessageToClient(responseObserver, usersList.toString());
             }
-
-            // "귓" 명령어 처리: 특정 사용자에게 메시지 전송
-            private void handlePrivate(String message, StreamObserver<com.example.grpc.multiChat.MultiChatMessage> responseObserver) {
-
-                //큐 붙이면 되는자리
-
-
-                String[] parts = message.split(" ", 3);
-                if (parts.length < 3) {
-                    sendMessageToClient(responseObserver, "잘못된 형식입니다. 올바른 형식은 귓 <유저이름> <메시지> 입니다.");
-                } else {
-                    String targetUser = parts[1];
-                    String privateMessage = parts[2];
-
-                    // 대상 사용자가 존재하는지 확인
-                    if (clients.containsKey(targetUser)) {
-                        StreamObserver<com.example.grpc.multiChat.MultiChatMessage> targetObserver = clients.get(targetUser);
-                        com.example.grpc.multiChat.MultiChatMessage privateChatMessage = com.example.grpc.multiChat.MultiChatMessage.newBuilder()
-                                .setSender(username)
-                                .setMessage(privateMessage)
-                                .setTimestamp(String.valueOf(System.currentTimeMillis()))
-                                .build();
-                        targetObserver.onNext(privateChatMessage);  // 특정 사용자에게 메시지 전송
-                    } else {
-                        sendMessageToClient(responseObserver, targetUser + "님은 현재 채팅방에 없습니다.");
-                    }
-                }
+            // "users" 명령어 처리: 온라인 사용자 목록 반환
+            private void handlehelp(StreamObserver<com.example.grpc.multiChat.MultiChatMessage> responseObserver) {
+                StringBuilder help = new StringBuilder("<도움말>\n" +
+                        "\n" +
+                        "단체 채팅을 기본으로 진행됩니다. \n" +
+                        "\n" +
+                        "특정 1인에게 메세지 전달 -> 귓 -> 보낼 사람 선택 -> 메세지 입력\n" +
+                        "\n" +
+                        "첨부파일 \n" +
+                        "1. 파일 -> 파일경로\n" +
+                        "2. 귓 -> 보낼사람 선택 -> 파일 -> 파일 경로\n" +
+                        "\n" +
+                        "MAP\n" +
+                        "1. map -> map입력\n" +
+                        "2. 귓 -> 보낼사람 선택 -> map -> map입력\n" +
+                        "\n" +
+                        "사용자 확인 users 입력");
+                sendMessageToClient(responseObserver, help.toString());
             }
 
             // 서버 측에서 클라이언트에게 메시지 전송

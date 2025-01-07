@@ -50,11 +50,17 @@ public interface MultiChatMessageOrBuilder extends
       getMessageBytes();
 
   /**
+   * <code>bytes file = 3;</code>
+   * @return The file.
+   */
+  com.google.protobuf.ByteString getFile();
+
+  /**
    * <pre>
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 3;</code>
+   * <code>string timestamp = 4;</code>
    * @return The timestamp.
    */
   java.lang.String getTimestamp();
@@ -63,7 +69,7 @@ public interface MultiChatMessageOrBuilder extends
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 3;</code>
+   * <code>string timestamp = 4;</code>
    * @return The bytes for timestamp.
    */
   com.google.protobuf.ByteString

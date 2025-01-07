@@ -9,7 +9,8 @@ option java_multiple_files=true;
 message MultiChatMessage {
   string sender = 1;   // 발신자
   string message = 2;   // 메시지 내용
-  string timestamp = 3; // 메시지 전송 시간
+  bytes file = 3;
+  string timestamp = 4; // 메시지 전송 시간
 }
 
 // 서비스 정의

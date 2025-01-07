@@ -17,10 +17,17 @@ import java.io.IOException;
 public class TopicConsumer implements Runnable, ExceptionListener{
     private String name;
     private String cusTopic ;
+    private String fileName ;
 
     public TopicConsumer(String name, String cusTopic) {
         this.name = name;
         this.cusTopic = cusTopic;
+    }
+
+    public TopicConsumer(String name, String cusTopic, String fileName) {
+        this.name = name;
+        this.cusTopic = cusTopic;
+        this.fileName = fileName;
     }
 
     public String getName() {
@@ -39,9 +46,17 @@ public class TopicConsumer implements Runnable, ExceptionListener{
         this.cusTopic = cusTopic;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public void run() {
         try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://172.168.10.71:61616");
 
             Connection connection = connectionFactory.createConnection();
             connection.setClientID(name);
@@ -64,25 +79,29 @@ public class TopicConsumer implements Runnable, ExceptionListener{
             while (true) {
                 Message message = consumer.receive(); // Wait indefinitely for a new message
                 if (message instanceof TextMessage) {
-                    // Handle text message
-                    TextMessage textMessage = (TextMessage) message;
-                    String text = textMessage.getText();
-                    System.out.println(text);
+                    if(((TextMessage) message).getText().contains("첨부파일:!!@@")){
+                        fileName = String.valueOf(((TextMessage) message).getText());
+                        fileName = fileName.substring(fileName.lastIndexOf("@") + 1);
+                    }else {
+                        // Handle text message
+                        TextMessage textMessage = (TextMessage) message;
+                        String text = textMessage.getText();
+                        System.out.println(text);
+                    }
                 } else if (message instanceof BytesMessage) {
+
                     // Handle file (BytesMessage)
                     BytesMessage bytesMessage = (BytesMessage) message;
                     byte[] fileBytes = new byte[(int) bytesMessage.getBodyLength()];
                     bytesMessage.readBytes(fileBytes);
-
-                    // Save the file to the specified location
-
-                    File outputFile = new File("C:\\Users\\HCNC\\Desktop\\download", "받은파일" + System.currentTimeMillis() + ".txt");
+                    File outputFile = new File("C:\\Users\\HCNC\\Desktop\\download","HCNC 받은파일 " + System.currentTimeMillis() + fileName);
                     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                         fos.write(fileBytes);
                         System.out.println("파일전송 및 저장 : " + outputFile.getAbsolutePath());
                     } catch (IOException e) {
                         System.out.println("Error saving received file: " + e);
                     }
+                    fileName = "";
                 } else {
                     System.out.println(name + " received an unexpected message type.");
                 }

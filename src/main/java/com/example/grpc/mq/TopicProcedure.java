@@ -17,9 +17,9 @@ public class TopicProcedure implements Runnable{
     private String name;
     private String cusTopic;
     private String message;
-    private File file; // To hold the file to be sent
+    private byte[] file; // To hold the file to be sent
 
-    public TopicProcedure(String name, String cusTopic, String message, File file) {
+    public TopicProcedure(String name, String cusTopic, String message, byte[] file) {
         this.name = name;
         this.cusTopic = cusTopic;
         this.message = message;
@@ -50,11 +50,11 @@ public class TopicProcedure implements Runnable{
         this.message = message;
     }
 
-    public File getFile() {
+    public byte[] getFile() {
         return file;
     }
 
-    public void setFile(File file) {
+    public void setFile(byte[] file) {
         this.file = file;
     }
 
@@ -62,7 +62,7 @@ public class TopicProcedure implements Runnable{
     public void run() {
         try {
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://172.168.10.71:61616");
 
             // Create a Connection
             Connection connection = connectionFactory.createConnection();
@@ -81,14 +81,14 @@ public class TopicProcedure implements Runnable{
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
 
             if (file != null) {
+
+                TextMessage textMessage = session.createTextMessage(message);
+                producer.send(textMessage);
                 // If a file is provided, send it as a BytesMessage
                 BytesMessage bytesMessage = session.createBytesMessage();
-                try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                    byte[] fileBytes = new byte[(int) file.length()];
-                    fileInputStream.read(fileBytes);
-                    bytesMessage.writeBytes(fileBytes);
-                }
+                bytesMessage.writeBytes(file);
                 producer.send(bytesMessage); // Send the file as a BytesMessage
+
             } else {
                 // If no file, send a regular TextMessage
                 TextMessage textMessage = session.createTextMessage(message);

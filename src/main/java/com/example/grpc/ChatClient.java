@@ -7,10 +7,14 @@ import com.example.grpc.mq.QueueConsumer;
 import com.example.grpc.mq.TopicConsumer;
 import com.example.grpc.multiChat.MultiChatMessage;
 import com.example.grpc.multiChat.MultiChatServiceGrpc;
+import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class ChatClient {
@@ -120,7 +124,55 @@ public class ChatClient {
                 // 연결 종료
                 chatrequestObserver.onCompleted();
 
-            }else {
+            } else if (message.equals("파일")) {
+                System.out.println("파일 경로 입력");
+                // 파일 경로 입력
+                String filePath = scanner.nextLine();
+                try {
+                    // FileInputStream을 사용하여 파일을 바이트 배열로 읽기
+                    File file = new File(filePath);
+                    byte[] fileContent = new byte[(int) file.length()];
+
+                    FileInputStream fis = new FileInputStream(file);
+
+                    fis.read(fileContent);  // 파일 내용을 바이트 배열로 읽음
+
+                    // MultiChatMessage에 바이트 배열을 전달
+                    MultiChatMessage multiChatMessage = MultiChatMessage.newBuilder()
+                            .setSender(username)
+                            .setMessage("첨부파일:!!@@" + file.getName())  // 빈 메시지 또는 적절한 메시지를 설정
+                            .setFile(ByteString.copyFrom(fileContent))  // 바이트 배열을 ByteString으로 변환
+                            .setTimestamp(String.valueOf(System.currentTimeMillis()))
+                            .build();
+                    requestObserver.onNext(multiChatMessage);
+
+                    fis.close();  // FileInputStream 닫기
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            } else {
                 MultiChatMessage multiChatMessage = MultiChatMessage.newBuilder()
                         .setSender(username)
                         .setMessage(message)

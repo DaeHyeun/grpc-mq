@@ -32,7 +32,7 @@ public class QueueConsumer implements Runnable, ExceptionListener{
 
     public void run() {
         try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://172.168.10.71:61616");
 
             Connection connection = connectionFactory.createConnection();
             connection.start();
@@ -64,7 +64,7 @@ public class QueueConsumer implements Runnable, ExceptionListener{
                     bytesMessage.readBytes(fileBytes);
 
                     // Save the file to the specified location
-                    File outputFile = new File("D:\\download", "받은파일" + System.currentTimeMillis() + ".txt");
+                    File outputFile = new File("D:\\download", "받은파일" + (System.currentTimeMillis() % 1000000) + ".txt");
                     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                         fos.write(fileBytes);
                             System.out.println("파일전송 및 저장 : " + outputFile.getAbsolutePath());
