@@ -15,6 +15,12 @@ import java.util.HashMap;
 @NoArgsConstructor
 public class QueueConsumer implements Runnable, ExceptionListener{
     private String name;
+    private String fileName;
+
+    public QueueConsumer(String name, String fileName) {
+        this.name = name;
+        this.fileName = fileName;
+    }
 
     public QueueConsumer(String name) {
         this.name = name;
@@ -24,11 +30,17 @@ public class QueueConsumer implements Runnable, ExceptionListener{
         return name;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public void run() {
         try {
@@ -50,27 +62,49 @@ public class QueueConsumer implements Runnable, ExceptionListener{
             while (true) {
                 Message message = consumer.receive(); // Wait indefinitely for a new message
                 if (message instanceof TextMessage) {
+                    if(((TextMessage) message).getText().contains("첨부파일:!!@@")){
+                    fileName = String.valueOf(((TextMessage) message).getText());
+                    fileName = fileName.substring(fileName.lastIndexOf("@") + 1);
+                }else {
+                        // ANSI escape codes for colors
+                        String red = "\u001B[31m";  // 빨간색
+                        String reset = "\u001B[0m";  // 색상 초기화
+                        //System.out.println("This is a normal text.");
+                        //System.out.println(red + "This text is red!" + reset);
                     // Handle text message
                     TextMessage textMessage = (TextMessage) message;
                     String text = textMessage.getText();
-                    String red = "\u001B[31m";  // 빨간색
-                    String reset = "\u001B[0m";  // 색상 초기화
                     System.out.println(red + text + reset);
-                } else if (message instanceof BytesMessage) {
+                }} else if (message instanceof BytesMessage) {
+                    // 폴더 경로 지정
+                    String folderPath = "C:\\download";
+
+                    // File 객체 생성
+                    File folder = new File(folderPath);
+
+                    if (!folder.exists()) {
+                        folder.mkdir();
+                    }
+
 
                     // Handle file (BytesMessage)
                     BytesMessage bytesMessage = (BytesMessage) message;
                     byte[] fileBytes = new byte[(int) bytesMessage.getBodyLength()];
                     bytesMessage.readBytes(fileBytes);
-
-                    // Save the file to the specified location
-                    File outputFile = new File("D:\\download", "받은파일" + (System.currentTimeMillis() % 1000000) + ".txt");
+                    File outputFile = new File("C:\\download","HCNC 받은파일 " + System.currentTimeMillis() + fileName);
                     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                         fos.write(fileBytes);
-                            System.out.println("파일전송 및 저장 : " + outputFile.getAbsolutePath());
-                        } catch (IOException e) {
-                            System.out.println("Error saving received file: " + e);
-                        }
+                        // ANSI escape codes for colors
+                        String red = "\u001B[31m";  // 빨간색
+                        String reset = "\u001B[0m";  // 색상 초기화
+                        //System.out.println("This is a normal text.");
+                        //System.out.println(red + "This text is red!" + reset);
+                        System.out.println(red + "파일전송 및 저장 : " + outputFile.getAbsolutePath() + reset);
+                    } catch (IOException e) {
+                        System.out.println("Error saving received file: " + e);
+                    }
+                    fileName = "";
+
 
                 } else if (message instanceof MapMessage) {
                     // Handle MapMessage

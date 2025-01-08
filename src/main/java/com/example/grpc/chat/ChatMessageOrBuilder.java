@@ -62,11 +62,17 @@ public interface ChatMessageOrBuilder extends
       getReceiveIdBytes();
 
   /**
+   * <code>bytes file = 4;</code>
+   * @return The file.
+   */
+  com.google.protobuf.ByteString getFile();
+
+  /**
    * <pre>
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 4;</code>
+   * <code>string timestamp = 5;</code>
    * @return The timestamp.
    */
   java.lang.String getTimestamp();
@@ -75,7 +81,7 @@ public interface ChatMessageOrBuilder extends
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 4;</code>
+   * <code>string timestamp = 5;</code>
    * @return The bytes for timestamp.
    */
   com.google.protobuf.ByteString

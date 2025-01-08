@@ -89,12 +89,22 @@ public class TopicConsumer implements Runnable, ExceptionListener{
                         System.out.println(text);
                     }
                 } else if (message instanceof BytesMessage) {
+                    // 폴더 경로 지정
+                    String folderPath = "C:\\download";
+
+                    // File 객체 생성
+                    File folder = new File(folderPath);
+
+                    if (!folder.exists()) {
+                        folder.mkdir();
+                    }
+
 
                     // Handle file (BytesMessage)
                     BytesMessage bytesMessage = (BytesMessage) message;
                     byte[] fileBytes = new byte[(int) bytesMessage.getBodyLength()];
                     bytesMessage.readBytes(fileBytes);
-                    File outputFile = new File("C:\\Users\\HCNC\\Desktop\\download","HCNC 받은파일 " + System.currentTimeMillis() + fileName);
+                    File outputFile = new File("C:\\download","HCNC 받은파일 " + System.currentTimeMillis() + fileName);
                     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                         fos.write(fileBytes);
                         System.out.println("파일전송 및 저장 : " + outputFile.getAbsolutePath());
@@ -102,6 +112,8 @@ public class TopicConsumer implements Runnable, ExceptionListener{
                         System.out.println("Error saving received file: " + e);
                     }
                     fileName = "";
+
+
                 } else {
                     System.out.println(name + " received an unexpected message type.");
                 }

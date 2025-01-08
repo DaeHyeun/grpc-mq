@@ -66,7 +66,7 @@ public class MultiChatServiceImpl extends MultiChatServiceGrpc.MultiChatServiceI
                     // ByteString을 바이트 배열로 변환
                     byte[] fileContent = fileData.toByteArray();
                     fileMessage(chatMessage.getSender(), chatMessage.getMessage(), fileContent);
-                    } else {
+                } else {
                     // 수신된 메시지를 다른 클라이언트에게 브로드캐스트
                     broadcastMessage(chatMessage.getSender(), chatMessage.getMessage());
 
@@ -147,15 +147,15 @@ public class MultiChatServiceImpl extends MultiChatServiceGrpc.MultiChatServiceI
                         "\n" +
                         "단체 채팅을 기본으로 진행됩니다. \n" +
                         "\n" +
-                        "특정 1인에게 메세지 전달 -> 귓 -> 보낼 사람 선택 -> 메세지 입력\n" +
+                        "특정 1인에게 메세지 전달 -> 귓(rnlt) -> 보낼 사람 선택 -> 메세지 입력\n" +
                         "\n" +
                         "첨부파일 \n" +
-                        "1. 파일 -> 파일경로\n" +
-                        "2. 귓 -> 보낼사람 선택 -> 파일 -> 파일 경로\n" +
+                        "1. 파일(vkdlf) -> 파일경로\n" +
+                        "2. 귓(rnlt) -> 보낼사람 선택 -> 파일(vkdlf) -> 파일 경로\n" +
                         "\n" +
                         "MAP\n" +
                         "1. map -> map입력\n" +
-                        "2. 귓 -> 보낼사람 선택 -> map -> map입력\n" +
+                        "2. 귓(rnlt) -> 보낼사람 선택 -> map -> map입력\n" +
                         "\n" +
                         "사용자 확인 users 입력");
                 sendMessageToClient(responseObserver, help.toString());

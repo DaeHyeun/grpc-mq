@@ -87,7 +87,7 @@ public class ChatClient {
                 break;
             }
 
-            if(message.equals("귓")) {
+            if(message.equals("귓")||message.equals("rnlt")) {
                 MultiChatMessage multiChatMessage = MultiChatMessage.newBuilder()
                         .setSender(username)
                         .setMessage("users")
@@ -96,15 +96,48 @@ public class ChatClient {
                 requestObserver.onNext(multiChatMessage);
                 System.out.println("누구에게 보낼것인가");
                 String receiveId = scanner.nextLine();;
-                System.out.println("보낼 내용");
+                System.out.println("보낼 내용 or 파일전송('파일')");
                 String wmessage = scanner.nextLine();
+                ChatMessage chatMessage = null;
+                if(wmessage.equals("파일") || wmessage.equals("vkdlf")) {
+                    System.out.println("파일 경로 입력");
+                    // 파일 경로 입력
+                    String filePath = scanner.nextLine();
+                    try {
+                        // FileInputStream을 사용하여 파일을 바이트 배열로 읽기
+                        File file = new File(filePath);
+                        byte[] fileContent = new byte[(int) file.length()];
 
-                ChatMessage chatMessage = ChatMessage.newBuilder()
-                        .setSender(username)
-                        .setMessage(wmessage)
-                        .setReceiveId(receiveId)
-                        .setTimestamp(String.valueOf(System.currentTimeMillis()))
-                        .build();
+                        FileInputStream fis = new FileInputStream(file);
+
+                        fis.read(fileContent);  // 파일 내용을 바이트 배열로 읽음
+
+                        // MultiChatMessage에 바이트 배열을 전달
+                        //파일 업하는 부분
+                        chatMessage = ChatMessage.newBuilder()
+                                .setSender(username)
+                                .setMessage("첨부파일:!!@@" + file.getName())
+                                .setReceiveId(receiveId)
+                                .setFile(ByteString.copyFrom(fileContent))
+                                .setTimestamp(String.valueOf(System.currentTimeMillis()))
+                                .build();
+
+                        fis.close();  // FileInputStream 닫기
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        //System.out.println("트라이케치 끝부분");
+                    }
+                }else {
+                    chatMessage = ChatMessage.newBuilder()
+                            .setSender(username)
+                            .setMessage(wmessage)
+                            .setReceiveId(receiveId)
+                            .setTimestamp(String.valueOf(System.currentTimeMillis()))
+                            .build();
+                }
+
+
 
                 StreamObserver<ChatMessage> chatrequestObserver = asyncStub2.sendMessage(new StreamObserver<ChatMessage>() {
 
@@ -124,7 +157,7 @@ public class ChatClient {
                 // 연결 종료
                 chatrequestObserver.onCompleted();
 
-            } else if (message.equals("파일")) {
+            } else if (message.equals("파일")||message.equals("vkdlf")) {
                 System.out.println("파일 경로 입력");
                 // 파일 경로 입력
                 String filePath = scanner.nextLine();
@@ -149,29 +182,9 @@ public class ChatClient {
                     fis.close();  // FileInputStream 닫기
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    //System.out.println("트라이케치 끝부분");
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             } else {
                 MultiChatMessage multiChatMessage = MultiChatMessage.newBuilder()
                         .setSender(username)

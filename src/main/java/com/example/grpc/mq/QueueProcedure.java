@@ -19,9 +19,9 @@ public class QueueProcedure implements Runnable{
     private String message;
     private String receivedId;
     private HashMap<String, Object> mapData;
-    private File file; // To hold the file to be sent
+    private byte[] file; // To hold the file to be sent
 
-    public QueueProcedure(String name, String message, String receivedId, HashMap<String, Object> mapData, File file) {
+    public QueueProcedure(String name, String message, String receivedId, HashMap<String, Object> mapData, byte[] file) {
         this.name = name;
         this.message = message;
         this.receivedId = receivedId;
@@ -45,7 +45,7 @@ public class QueueProcedure implements Runnable{
         return mapData;
     }
 
-    public File getFile() {
+    public byte[] getFile() {
         return file;
     }
 
@@ -65,7 +65,7 @@ public class QueueProcedure implements Runnable{
         this.mapData = mapData;
     }
 
-    public void setFile(File file) {
+    public void setFile(byte[] file) {
         this.file = file;
     }
 
@@ -91,13 +91,11 @@ public class QueueProcedure implements Runnable{
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
             if (file != null) {
+                TextMessage textMessage = session.createTextMessage(message);
+                producer.send(textMessage);
                 // If a file is provided, send it as a BytesMessage
                 BytesMessage bytesMessage = session.createBytesMessage();
-                try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                    byte[] fileBytes = new byte[(int) file.length()];
-                    fileInputStream.read(fileBytes);
-                    bytesMessage.writeBytes(fileBytes);
-                }
+                bytesMessage.writeBytes(file);
                 producer.send(bytesMessage); // Send the file as a BytesMessage
             } else if(mapData != null){
                 // If a message is provided, send a MapMessage

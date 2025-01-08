@@ -34,6 +34,7 @@ private static final long serialVersionUID = 0L;
     sender_ = "";
     message_ = "";
     receiveId_ = "";
+    file_ = com.google.protobuf.ByteString.EMPTY;
     timestamp_ = "";
   }
 
@@ -183,7 +184,18 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int TIMESTAMP_FIELD_NUMBER = 4;
+  public static final int FILE_FIELD_NUMBER = 4;
+  private com.google.protobuf.ByteString file_ = com.google.protobuf.ByteString.EMPTY;
+  /**
+   * <code>bytes file = 4;</code>
+   * @return The file.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString getFile() {
+    return file_;
+  }
+
+  public static final int TIMESTAMP_FIELD_NUMBER = 5;
   @SuppressWarnings("serial")
   private volatile java.lang.Object timestamp_ = "";
   /**
@@ -191,7 +203,7 @@ private static final long serialVersionUID = 0L;
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 4;</code>
+   * <code>string timestamp = 5;</code>
    * @return The timestamp.
    */
   @java.lang.Override
@@ -212,7 +224,7 @@ private static final long serialVersionUID = 0L;
    * 메시지 전송 시간
    * </pre>
    *
-   * <code>string timestamp = 4;</code>
+   * <code>string timestamp = 5;</code>
    * @return The bytes for timestamp.
    */
   @java.lang.Override
@@ -253,8 +265,11 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(receiveId_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 3, receiveId_);
     }
+    if (!file_.isEmpty()) {
+      output.writeBytes(4, file_);
+    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(timestamp_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 4, timestamp_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 5, timestamp_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -274,8 +289,12 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(receiveId_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(3, receiveId_);
     }
+    if (!file_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(4, file_);
+    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(timestamp_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(4, timestamp_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(5, timestamp_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -298,6 +317,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getMessage())) return false;
     if (!getReceiveId()
         .equals(other.getReceiveId())) return false;
+    if (!getFile()
+        .equals(other.getFile())) return false;
     if (!getTimestamp()
         .equals(other.getTimestamp())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -317,6 +338,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getMessage().hashCode();
     hash = (37 * hash) + RECEIVEID_FIELD_NUMBER;
     hash = (53 * hash) + getReceiveId().hashCode();
+    hash = (37 * hash) + FILE_FIELD_NUMBER;
+    hash = (53 * hash) + getFile().hashCode();
     hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
     hash = (53 * hash) + getTimestamp().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
@@ -457,6 +480,7 @@ private static final long serialVersionUID = 0L;
       sender_ = "";
       message_ = "";
       receiveId_ = "";
+      file_ = com.google.protobuf.ByteString.EMPTY;
       timestamp_ = "";
       return this;
     }
@@ -501,6 +525,9 @@ private static final long serialVersionUID = 0L;
         result.receiveId_ = receiveId_;
       }
       if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.file_ = file_;
+      }
+      if (((from_bitField0_ & 0x00000010) != 0)) {
         result.timestamp_ = timestamp_;
       }
     }
@@ -532,9 +559,12 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000004;
         onChanged();
       }
+      if (other.getFile() != com.google.protobuf.ByteString.EMPTY) {
+        setFile(other.getFile());
+      }
       if (!other.getTimestamp().isEmpty()) {
         timestamp_ = other.timestamp_;
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
@@ -579,10 +609,15 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 26
             case 34: {
-              timestamp_ = input.readStringRequireUtf8();
+              file_ = input.readBytes();
               bitField0_ |= 0x00000008;
               break;
             } // case 34
+            case 42: {
+              timestamp_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000010;
+              break;
+            } // case 42
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -856,13 +891,45 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private com.google.protobuf.ByteString file_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes file = 4;</code>
+     * @return The file.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getFile() {
+      return file_;
+    }
+    /**
+     * <code>bytes file = 4;</code>
+     * @param value The file to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFile(com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      file_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes file = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFile() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      file_ = getDefaultInstance().getFile();
+      onChanged();
+      return this;
+    }
+
     private java.lang.Object timestamp_ = "";
     /**
      * <pre>
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 5;</code>
      * @return The timestamp.
      */
     public java.lang.String getTimestamp() {
@@ -882,7 +949,7 @@ private static final long serialVersionUID = 0L;
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 5;</code>
      * @return The bytes for timestamp.
      */
     public com.google.protobuf.ByteString
@@ -903,7 +970,7 @@ private static final long serialVersionUID = 0L;
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 5;</code>
      * @param value The timestamp to set.
      * @return This builder for chaining.
      */
@@ -911,7 +978,7 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       timestamp_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
@@ -920,12 +987,12 @@ private static final long serialVersionUID = 0L;
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearTimestamp() {
       timestamp_ = getDefaultInstance().getTimestamp();
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000010);
       onChanged();
       return this;
     }
@@ -934,7 +1001,7 @@ private static final long serialVersionUID = 0L;
      * 메시지 전송 시간
      * </pre>
      *
-     * <code>string timestamp = 4;</code>
+     * <code>string timestamp = 5;</code>
      * @param value The bytes for timestamp to set.
      * @return This builder for chaining.
      */
@@ -943,7 +1010,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       timestamp_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }

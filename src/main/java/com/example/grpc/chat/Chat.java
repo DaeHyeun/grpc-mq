@@ -39,12 +39,13 @@ public final class Chat {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nchat.proto\022\025com.example.grpc.chat\"T\n\013C" +
+      "\n\nchat.proto\022\025com.example.grpc.chat\"b\n\013C" +
       "hatMessage\022\016\n\006sender\030\001 \001(\t\022\017\n\007message\030\002 " +
-      "\001(\t\022\021\n\treceiveId\030\003 \001(\t\022\021\n\ttimestamp\030\004 \001(" +
-      "\t2h\n\013ChatService\022Y\n\013SendMessage\022\".com.ex" +
-      "ample.grpc.chat.ChatMessage\032\".com.exampl" +
-      "e.grpc.chat.ChatMessage(\0010\001B\002P\001b\006proto3"
+      "\001(\t\022\021\n\treceiveId\030\003 \001(\t\022\014\n\004file\030\004 \001(\014\022\021\n\t" +
+      "timestamp\030\005 \001(\t2h\n\013ChatService\022Y\n\013SendMe" +
+      "ssage\022\".com.example.grpc.chat.ChatMessag" +
+      "e\032\".com.example.grpc.chat.ChatMessage(\0010" +
+      "\001B\002P\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -55,7 +56,7 @@ public final class Chat {
     internal_static_com_example_grpc_chat_ChatMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_example_grpc_chat_ChatMessage_descriptor,
-        new java.lang.String[] { "Sender", "Message", "ReceiveId", "Timestamp", });
+        new java.lang.String[] { "Sender", "Message", "ReceiveId", "File", "Timestamp", });
     descriptor.resolveAllFeaturesImmutable();
   }
 

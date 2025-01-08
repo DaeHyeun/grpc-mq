@@ -2,6 +2,7 @@ package com.example.grpc.chat;
 
 import com.example.grpc.mq.QueueProcedure;
 import com.example.grpc.mq.TopicProcedure;
+import com.google.protobuf.ByteString;
 import io.grpc.stub.StreamObserver;
 
 import java.util.ArrayList;
@@ -41,8 +42,20 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
                 String message = chatMessage.getMessage();
                 String receiveId = chatMessage.getReceiveId();
 
-                // 새로운 사용자일 경우
-                new Thread(new QueueProcedure( chatMessage.getSender(), chatMessage.getSender() + " : " + message, receiveId,null,null )).start();
+                if(message.contains("첨부파일:!!@@")) {
+                    ByteString fileData = chatMessage.getFile();
+                    // ByteString을 바이트 배열로 변환
+                    byte[] fileContent = fileData.toByteArray();
+                   // fileMessage(chatMessage.getSender(), chatMessage.getMessage(), fileContent);
+                    System.out.println("====================================");
+                    System.out.println(fileContent.length);
+                    System.out.println("====================================");
+
+                    new Thread(new QueueProcedure(chatMessage.getSender(), chatMessage.getSender() + " : " + message, receiveId, null, fileContent)).start();
+
+                }else {
+                    new Thread(new QueueProcedure(chatMessage.getSender(), chatMessage.getSender() + " : " + message, receiveId, null, null)).start();
+                }
             }
 
             //에러
@@ -68,6 +81,7 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
             //                                          커스템 메소드                                             //
             ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
         };
