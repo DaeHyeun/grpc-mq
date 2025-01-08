@@ -97,6 +97,7 @@ public class QueueProcedure implements Runnable{
                 BytesMessage bytesMessage = session.createBytesMessage();
                 bytesMessage.writeBytes(file);
                 producer.send(bytesMessage); // Send the file as a BytesMessage
+                file = null;
             } else if(mapData != null){
                 // If a message is provided, send a MapMessage
                 MapMessage mapMessage = session.createMapMessage();

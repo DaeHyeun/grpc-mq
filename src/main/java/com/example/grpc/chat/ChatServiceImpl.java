@@ -47,9 +47,6 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
                     // ByteString을 바이트 배열로 변환
                     byte[] fileContent = fileData.toByteArray();
                    // fileMessage(chatMessage.getSender(), chatMessage.getMessage(), fileContent);
-                    System.out.println("====================================");
-                    System.out.println(fileContent.length);
-                    System.out.println("====================================");
 
                     new Thread(new QueueProcedure(chatMessage.getSender(), chatMessage.getSender() + " : " + message, receiveId, null, fileContent)).start();
 

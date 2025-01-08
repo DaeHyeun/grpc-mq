@@ -88,7 +88,7 @@ public class TopicProcedure implements Runnable{
                 BytesMessage bytesMessage = session.createBytesMessage();
                 bytesMessage.writeBytes(file);
                 producer.send(bytesMessage); // Send the file as a BytesMessage
-
+                file = null;
             } else {
                 // If no file, send a regular TextMessage
                 TextMessage textMessage = session.createTextMessage(message);
