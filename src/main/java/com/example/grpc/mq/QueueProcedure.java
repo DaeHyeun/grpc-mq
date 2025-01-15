@@ -74,7 +74,7 @@ public class QueueProcedure implements Runnable{
         try {
 
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://172.168.10.71:61616");
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
 
             // Create a Connection
             Connection connection = connectionFactory.createConnection();

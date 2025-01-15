@@ -44,7 +44,7 @@ public class QueueConsumer implements Runnable, ExceptionListener{
 
     public void run() {
         try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://172.168.10.71:61616");
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
 
             Connection connection = connectionFactory.createConnection();
             connection.start();
